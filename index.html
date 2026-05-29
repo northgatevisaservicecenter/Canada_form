@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NorthGate Canada Visa Application Form</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; padding: 15px; margin: 0; }
+        .form-container { background: #ffffff; max-width: 850px; width: 100%; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 10px solid #C52D2F; margin-top: 20px; margin-bottom: 40px; }
+        .logo-container { text-align: center; margin-bottom: 20px; }
+        .logo-container img { max-width: 180px; height: auto; }
+        .header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+        .header h2 { color: #C52D2F; margin: 0; font-size: 24px; text-transform: uppercase; }
+        .header p { color: #666; margin: 5px 0 0; font-size: 14px; }
+        .section-title { background: #fff5f5; color: #C52D2F; padding: 12px 15px; border-radius: 5px; font-size: 18px; font-weight: bold; margin: 30px 0 15px 0; border-left: 5px solid #C52D2F; }
+        
+        .grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        @media (min-width: 600px) { .grid { grid-template-columns: 1fr 1fr; } }
+        
+        .input-group { margin-bottom: 15px; text-align: left; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 13px; color: #333; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; transition: 0.3s; }
+        input:focus, select:focus, textarea:focus { border-color: #C52D2F; outline: none; box-shadow: 0 0 5px rgba(197, 45, 47, 0.2); }
+        .full-width { grid-column: 1 / -1; }
+        
+        #countries_container, #relative_details, #study_permit_section { display: none; }
+
+        /* Declaration Box Fixed Alignment */
+        .declaration-box { 
+            grid-column: 1 / -1; 
+            margin-top: 30px; 
+            padding: 20px; 
+            background: #fff9e6; 
+            border-radius: 8px; 
+            font-size: 14px; 
+            display: flex; 
+            align-items: flex-start; 
+            gap: 12px; 
+            border: 1px solid #ffeeba; 
+            text-align: left; 
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .declaration-box input[type="checkbox"] { 
+            width: 18px; 
+            height: 18px; 
+            margin: 0;
+            margin-top: 2px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .declaration-box label { 
+            cursor: pointer; 
+            font-weight: 500;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .submit-btn { width: 100%; padding: 18px; background-color: #C52D2F; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 25px; transition: 0.3s ease; }
+        .submit-btn:hover { background-color: #a32527; }
+        .submit-btn:disabled { background-color: #cccccc; }
+        
+        .modal-overlay { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
+        .modal-box { background: white; margin: 12% auto; padding: 40px; border-radius: 15px; width: 85%; max-width: 400px; text-align: center; }
+        .success-icon { font-size: 60px; color: #25D366; margin-bottom: 20px; }
+
+        /* Modal Layout Changes */
+        .modal-btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 25px; }
+        .home-btn { width: 100%; padding: 15px; background-color: #f4f7f6; color: #333; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s ease; text-decoration: none; display: inline-block; box-sizing: border-box; }
+        .home-btn:hover { background-color: #e4e6eb; }
+        .modal-box .submit-btn { margin-top: 0; padding: 15px; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <div class="logo-container"><img src="logo.png" alt="NorthGate Logo"></div>
+    <div class="header">
+        <p><strong>CANADA VISA APPLICANT FORM</strong></p>
+    </div>
+
+    <form id="canadaForm">
+        <!-- Hidden Connector line for central Apps Script routing -->
+        <input type="hidden" name="form_type" value="Canada">
+
+        <div class="section-title">👤 Applicant Details</div>
+        <div class="grid">
+            <div class="input-group"><label>Full Name (as per Passport) *</label><input type="text" name="full_name" required></div>
+            <div class="input-group"><label>Father’s / Husband’s Name *</label><input type="text" name="father_name" required></div>
+            <div class="input-group"><label>Date of Birth *</label><input type="date" name="dob" required></div>
+            <div class="input-group"><label>CNIC / Passport No *</label><input type="text" name="passport" required></div>
+            <div class="input-group"><label>Contact Number *</label><input type="text" name="contact" required></div>
+            <div class="input-group"><label>Email Address *</label><input type="email" name="email_id" required></div>
+        </div>
+
+        <div class="section-title">✈️ Travel Information</div>
+        <div class="grid">
+            <div class="input-group">
+                <label>Purpose of Travel *</label>
+                <select name="purpose" id="purpose" onchange="toggleStudySection()" required>
+                    <option value="">Select</option>
+                    <option value="Visit">Visit / Tourist</option>
+                    <option value="Study">Study</option>
+                    <option value="Work">Work</option>
+                    <option value="Immigration">Immigration</option>
+                </select>
+            </div>
+            <div class="input-group"><label>Intended Travel Date</label><input type="date" name="travel_date"></div>
+            <div class="input-group"><label>Duration of Stay</label><input type="text" name="duration" placeholder="e.g. 6 Months"></div>
+            <div class="input-group"><label>Intended Province/City in Canada</label><input type="text" name="canada_city" placeholder="e.g. Ontario, Toronto"></div>
+        </div>
+
+        <div class="section-title">🌍 Travel History</div>
+        <div class="grid">
+            <div class="input-group">
+                <label>Have you travelled internationally before? *</label>
+                <select name="intl_travel" onchange="toggleCountries(this.value)" required>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                </select>
+            </div>
+            <div class="input-group" id="countries_container">
+                <label>Countries Visited</label>
+                <input type="text" name="countries_visited" placeholder="e.g. Turkey, UAE">
+            </div>
+            <div class="input-group"><label>Previous Canada Visa (if any)</label><input type="text" name="prev_canada_visa"></div>
+            <div class="input-group"><label>Visa Refusals (Mention Country & Reason)</label><input type="text" name="refusals" placeholder="None"></div>
+        </div>
+
+        <div class="section-title">👨‍👩‍👧 Family Information</div>
+        <div class="grid">
+            <div class="input-group">
+                <label>Marital Status *</label>
+                <select name="marital_status" required>
+                    <option value="">Select</option>
+                    <option value="Single">Single</option>
+                    <option value="Married">Married</option>
+                    <option value="Divorced">Divorced</option>
+                    <option value="Widowed">Widowed</option>
+                </select>
+            </div>
+            <div class="input-group"><label>Number of Dependents *</label><input type="number" name="dependents" required></div>
+            <div class="input-group"><label>Spouse Name</label><input type="text" name="spouse_name"></div>
+            <div class="input-group full-width"><label>Children Details (Names & Ages)</label><textarea name="children_details" rows="2"></textarea></div>
+            
+            <div class="input-group">
+                <label>Any relatives in Canada? *</label>
+                <select name="relatives_in_canada" onchange="toggleRelatives(this.value)" required>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                </select>
+            </div>
+            <div class="input-group" id="relative_details">
+                <label>Relative Details (Name & Relation)</label>
+                <input type="text" name="relative_info">
+            </div>
+        </div>
+
+        <div class="section-title">💼 Employment / Financial Details</div>
+        <div class="grid">
+            <div class="input-group"><label>Occupation / Business *</label><input type="text" name="occupation" required></div>
+            <div class="input-group"><label>Job Title</label><input type="text" name="job_title"></div>
+            <div class="input-group"><label>Company Name *</label><input type="text" name="company" required></div>
+            <div class="input-group"><label>Monthly Income *</label><input type="text" name="income" required></div>
+            <div class="input-group"><label>Bank Balance (Approx. PKR/CAD) *</label><input type="text" name="bank_balance" required></div>
+            <div class="input-group"><label>Sponsor Details (if any)</label><input type="text" name="sponsor"></div>
+        </div>
+
+        <div id="study_permit_section">
+            <div class="section-title">🎓 Study Permit Details</div>
+            <div class="grid">
+                <div class="input-group"><label>Name of Institution</label><input type="text" name="college_name"></div>
+                <div class="input-group"><label>Program Name</label><input type="text" name="program_name"></div>
+                <div class="input-group"><label>Duration of Study</label><input type="text" name="study_duration"></div>
+                <div class="input-group">
+                    <label>Tuition Fee Paid?</label>
+                    <select name="fee_paid"><option value="No">No</option><option value="Yes">Yes</option></select>
+                </div>
+                <div class="input-group">
+                    <label>GIC Available?</label>
+                    <select name="gic_available"><option value="No">No</option><option value="Yes">Yes</option></select>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">🛡️ Additional Information</div>
+        <div class="grid">
+            <div class="input-group">
+                <label>Ever refused a visa from any country? *</label>
+                <select name="any_refusal" required><option value="No">No</option><option value="Yes">Yes</option></select>
+            </div>
+            <div class="input-group">
+                <label>Any Criminal Record? *</label>
+                <select name="criminal_record" required><option value="No">No</option><option value="Yes">Yes</option></select>
+            </div>
+            <div class="input-group full-width"><label>Medical Conditions (if any)</label><input type="text" name="medical_info" placeholder="None"></div>
+        </div>
+
+        <div class="declaration-box">
+            <input type="checkbox" id="agree" required>
+            <label for="agree">I hereby declare that all the information provided is true and accurate to the best of my knowledge. I understand that providing false or misleading information may result in visa refusal.</label>
+        </div>
+
+        <button type="submit" id="submitBtn" class="submit-btn">SUBMIT APPLICATION</button>
+    </form>
+</div>
+
+<!-- Modal Popup Box with Home Redirect Link -->
+<div id="thankYouModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="success-icon">✔</div>
+        <h2 style="color:#C52D2F; margin-top:0;">Success!</h2>
+        <p style="color: #666; font-size: 14px;">Your details have been saved successfully. We will contact you soon.</p>
+        
+        <div class="modal-btn-group">
+            <button class="submit-btn" onclick="window.location.reload()">Fill New Form</button>
+            <a href="https://northgatevisaservices.com/" class="home-btn">Go Back to Home</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Agar aap Central Centralized Apps Script link use karengi, toh same multi-tab link yahan aayega
+    const scriptURL = 'https://script.google.com/macros/s/YOUR_CENTRAL_DEPLOYMENT_URL/exec'; 
+    const form = document.getElementById('canadaForm');
+    const btn = document.getElementById('submitBtn');
+
+    function toggleCountries(val) {
+        document.getElementById('countries_container').style.display = val === 'Yes' ? 'block' : 'none';
+    }
+
+    function toggleRelatives(val) {
+        document.getElementById('relative_details').style.display = val === 'Yes' ? 'block' : 'none';
+    }
+
+    function toggleStudySection() {
+        const purpose = document.getElementById('purpose').value;
+        document.getElementById('study_permit_section').style.display = purpose === 'Study' ? 'block' : 'none';
+    }
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        btn.disabled = true;
+        btn.innerHTML = "Processing...";
+
+        const formData = new FormData(form);
+        const params = new URLSearchParams(formData);
+
+        fetch(scriptURL + "?" + params.toString(), { method: 'GET', mode: 'no-cors' })
+        .then(() => {
+            document.getElementById('thankYouModal').style.display = 'block';
+            form.reset();
+            btn.disabled = false;
+            btn.innerHTML = "SUBMIT APPLICATION";
+        })
+        .catch(error => {
+            console.error('Error!', error.message);
+            alert("Submission failed. Please check your Script URL.");
+            btn.disabled = false;
+        });
+    });
+</script>
+
+</body>
+</html>
