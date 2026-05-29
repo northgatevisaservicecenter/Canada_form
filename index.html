@@ -218,8 +218,8 @@
 </div>
 
 <script>
-    // FIXED MULTI-TAB TARGET ROUTING ENGINE METHOD
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwRS74xWfnYK-5tPEUosxFkRl9rDReHfyIVSiZwoUli-888EAXVW6OquQMA2tNpu7C0qA/exec?form_type=Canada'; 
+    // Pure Base URL (No manual parameter tags)
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwRS74xWfnYK-5tPEUosxFkRl9rDReHfyIVSiZwoUli-888EAXVW6OquQMA2tNpu7C0qA/exec'; 
     const form = document.getElementById('canadaForm');
     const btn = document.getElementById('submitBtn');
 
@@ -227,7 +227,6 @@
         document.getElementById('countries_container').style.display = val === 'Yes' ? 'block' : 'none';
     }
 
-    // Fixed functional syntax error context hook
     function toggleRelatives(val) {
         document.getElementById('relative_details').style.display = val === 'Yes' ? 'block' : 'none';
     }
@@ -244,6 +243,9 @@
 
         const formData = new FormData(form);
         const params = new URLSearchParams(formData);
+        
+        // FIXED ROUTING PARAMETER: Force state injection inside parameters string safely
+        params.set('form_type', 'Canada');
 
         fetch(scriptURL + "?" + params.toString(), { method: 'GET', mode: 'no-cors' })
         .then(() => {
