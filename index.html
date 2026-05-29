@@ -61,14 +61,8 @@
         .submit-btn:disabled { background-color: #cccccc; }
         
         .modal-overlay { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
-        .modal-box { background: white; margin: 12% auto; padding: 40px; border-radius: 15px; width: 85%; max-width: 400px; text-align: center; }
+        .modal-box { background: white; margin: 15% auto; padding: 40px; border-radius: 15px; width: 85%; max-width: 400px; text-align: center; }
         .success-icon { font-size: 60px; color: #25D366; margin-bottom: 20px; }
-
-        /* Modal Layout Changes */
-        .modal-btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 25px; }
-        .home-btn { width: 100%; padding: 15px; background-color: #f4f7f6; color: #333; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s ease; text-decoration: none; display: inline-block; box-sizing: border-box; }
-        .home-btn:hover { background-color: #e4e6eb; }
-        .modal-box .submit-btn { margin-top: 0; padding: 15px; font-size: 16px; }
     </style>
 </head>
 <body>
@@ -80,9 +74,6 @@
     </div>
 
     <form id="canadaForm">
-        <!-- Hidden Connector line for central Apps Script routing -->
-        <input type="hidden" name="form_type" value="Canada">
-
         <div class="section-title">👤 Applicant Details</div>
         <div class="grid">
             <div class="input-group"><label>Full Name (as per Passport) *</label><input type="text" name="full_name" required></div>
@@ -205,23 +196,17 @@
     </form>
 </div>
 
-<!-- Modal Popup Box with Home Redirect Link -->
 <div id="thankYouModal" class="modal-overlay">
     <div class="modal-box">
         <div class="success-icon">✔</div>
-        <h2 style="color:#C52D2F; margin-top:0;">Success!</h2>
-        <p style="color: #666; font-size: 14px;">Your details have been saved successfully. We will contact you soon.</p>
-        
-        <div class="modal-btn-group">
-            <button class="submit-btn" onclick="window.location.reload()">Fill New Form</button>
-            <a href="https://northgatevisaservices.com/" class="home-btn">Go Back to Home</a>
-        </div>
+        <h2 style="color:#C52D2F;">Success!</h2>
+        <p>Your details have been saved successfully. We will contact you soon.</p>
+        <button class="submit-btn" onclick="window.location.reload()">Fill New Form</button>
     </div>
 </div>
 
 <script>
-    // Agar aap Central Centralized Apps Script link use karengi, toh same multi-tab link yahan aayega
-    const scriptURL = 'https://script.google.com/macros/s/YOUR_CENTRAL_DEPLOYMENT_URL/exec'; 
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxEpttEXbtshBHs4G6ngNKg0znyuImYcs9MBSMewniVYBZJruBSqc68W6T5dSxYwmucSA/exec'; 
     const form = document.getElementById('canadaForm');
     const btn = document.getElementById('submitBtn');
 
@@ -251,7 +236,7 @@
             document.getElementById('thankYouModal').style.display = 'block';
             form.reset();
             btn.disabled = false;
-            btn.innerHTML = "SUBMIT APPLICATION";
+            btn.innerHTML = "SUBMIT CANADA APPLICATION";
         })
         .catch(error => {
             console.error('Error!', error.message);
