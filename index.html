@@ -23,7 +23,17 @@
         input:focus, select:focus, textarea:focus { border-color: #C52D2F; outline: none; box-shadow: 0 0 5px rgba(197, 45, 47, 0.2); }
         .full-width { grid-column: 1 / -1; }
         
-        #countries_container, #relative_details, #study_permit_section { display: none; }
+        #countries_container, #relative_details, #study_permit_section, #refusal_details_container, #criminal_details_container { display: none; }
+
+        /* Conditional Section Styling for clear separation */
+        .conditional-fields {
+            background: #fffafa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed #C52D2F;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
 
         /* Declaration Box Fixed Alignment */
         .declaration-box { 
@@ -123,7 +133,7 @@
                 <input type="text" name="countries_visited" placeholder="e.g. Turkey, UAE">
             </div>
             <div class="input-group"><label>Previous Canada Visa (if any)</label><input type="text" name="prev_canada_visa"></div>
-            <div class="input-group"><label>Visa Refusals (Mention Country & Reason)</label><input type="text" name="refusals" placeholder="None"></div>
+            <div class="input-group full-width"><label>Visa Refusals History (General Info)</label><input type="text" name="refusals" placeholder="None"></div>
         </div>
 
         <div class="section-title">👨‍👩‍👧 Family Information</div>
@@ -186,12 +196,39 @@
         <div class="grid">
             <div class="input-group">
                 <label>Ever refused a visa from any country? *</label>
-                <select name="any_refusal" required><option value="No">No</option><option value="Yes">Yes</option></select>
+                <select name="any_refusal" id="any_refusal" onchange="toggleRefusalDetails()" required>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                </select>
             </div>
             <div class="input-group">
                 <label>Any Criminal Record? *</label>
-                <select name="criminal_record" required><option value="No">No</option><option value="Yes">Yes</option></select>
+                <select name="criminal_record" id="criminal_record" onchange="toggleCriminalDetails()" required>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                </select>
             </div>
+
+            <div id="refusal_details_container" class="full-width conditional-fields">
+                <div class="grid" style="gap: 15px;">
+                    <div class="input-group">
+                        <label>Which Country? (Refusal) *</label>
+                        <input type="text" name="refused_country" id="refused_country" placeholder="e.g. USA, UK, Europe">
+                    </div>
+                    <div class="input-group">
+                        <label>Reason for Refusal *</label>
+                        <input type="text" name="refused_reason" id="refused_reason" ">
+                    </div>
+                </div>
+            </div>
+
+            <div id="criminal_details_container" class="full-width conditional-fields">
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label>Please provide Criminal Record Details / Reason *</label>
+                    <textarea name="criminal_details" id="criminal_details" rows="3" placeholder="Provide brief explanation about your record..."></textarea>
+                </div>
+            </div>
+
             <div class="input-group full-width"><label>Medical Conditions (if any)</label><input type="text" name="medical_info" placeholder="None"></div>
         </div>
 
@@ -218,7 +255,6 @@
 </div>
 
 <script>
-    // Pure Base URL (No manual parameter tags)
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwRS74xWfnYK-5tPEUosxFkRl9rDReHfyIVSiZwoUli-888EAXVW6OquQMA2tNpu7C0qA/exec'; 
     const form = document.getElementById('canadaForm');
     const btn = document.getElementById('submitBtn');
@@ -236,6 +272,42 @@
         document.getElementById('study_permit_section').style.display = purpose === 'Study' ? 'block' : 'none';
     }
 
+    // Dynamic Visa Refusal Toggle for Canada Form
+    function toggleRefusalDetails() {
+        const refusalStatus = document.getElementById('any_refusal').value;
+        const container = document.getElementById('refusal_details_container');
+        const countryInput = document.getElementById('refused_country');
+        const reasonInput = document.getElementById('refused_reason');
+
+        if (refusalStatus === 'Yes') {
+            container.style.display = 'block';
+            countryInput.required = true;
+            reasonInput.required = true;
+        } else {
+            container.style.display = 'none';
+            countryInput.required = false;
+            reasonInput.required = false;
+            countryInput.value = '';
+            reasonInput.value = '';
+        }
+    }
+
+    // Dynamic Criminal Details Toggle for Canada Form
+    function toggleCriminalDetails() {
+        const criminalStatus = document.getElementById('criminal_record').value;
+        const container = document.getElementById('criminal_details_container');
+        const detailsInput = document.getElementById('criminal_details');
+
+        if (criminalStatus === 'Yes') {
+            container.style.display = 'block';
+            detailsInput.required = true;
+        } else {
+            container.style.display = 'none';
+            detailsInput.required = false;
+            detailsInput.value = '';
+        }
+    }
+
     form.addEventListener('submit', e => {
         e.preventDefault();
         btn.disabled = true;
@@ -244,13 +316,14 @@
         const formData = new FormData(form);
         const params = new URLSearchParams(formData);
         
-        // FIXED ROUTING PARAMETER: Force state injection inside parameters string safely
         params.set('form_type', 'Canada');
 
         fetch(scriptURL + "?" + params.toString(), { method: 'GET', mode: 'no-cors' })
         .then(() => {
             document.getElementById('thankYouModal').style.display = 'block';
             form.reset();
+            toggleRefusalDetails();
+            toggleCriminalDetails();
             btn.disabled = false;
             btn.innerHTML = "SUBMIT APPLICATION";
         })
