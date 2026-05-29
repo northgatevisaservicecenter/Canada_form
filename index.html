@@ -217,7 +217,7 @@
                     </div>
                     <div class="input-group">
                         <label>Reason for Refusal *</label>
-                        <input type="text" name="refused_reason" id="refused_reason" ">
+                        <input type="text" name="refused_reason" id="refused_reason" placeholder="e.g. Lack of strong ties">
                     </div>
                 </div>
             </div>
@@ -263,8 +263,12 @@
         document.getElementById('countries_container').style.display = val === 'Yes' ? 'block' : 'none';
     }
 
+    // Fixed hidden logic matching form reset state
     function toggleRelatives(val) {
-        document.getElementById('relative_details').style.display = val === 'Yes' ? 'block' : 'none';
+        const relDetails = document.getElementById('relative_details');
+        if(relDetails) {
+            relDetails.style.display = val === 'Yes' ? 'block' : 'none';
+        }
     }
 
     function toggleStudySection() {
@@ -292,7 +296,7 @@
         }
     }
 
-    // Dynamic Criminal Details Toggle for Canada Form
+    // Fixed Dynamic Criminal Details Toggle for Canada Form (Removed the auto-clear value bug)
     function toggleCriminalDetails() {
         const criminalStatus = document.getElementById('criminal_record').value;
         const container = document.getElementById('criminal_details_container');
@@ -304,7 +308,6 @@
         } else {
             container.style.display = 'none';
             detailsInput.required = false;
-            detailsInput.value = '';
         }
     }
 
@@ -324,6 +327,7 @@
             form.reset();
             toggleRefusalDetails();
             toggleCriminalDetails();
+            toggleRelatives('No');
             btn.disabled = false;
             btn.innerHTML = "SUBMIT APPLICATION";
         })
