@@ -23,7 +23,7 @@
         input:focus, select:focus, textarea:focus { border-color: #C52D2F; outline: none; box-shadow: 0 0 5px rgba(197, 45, 47, 0.2); }
         .full-width { grid-column: 1 / -1; }
         
-        /* Fixed: Hidden by default fields */
+        /* Hidden by default fields */
         #countries_container, #relative_details, #study_permit_section, #spouse_field, #children_field { display: none; }
 
         /* Declaration Box Fixed Alignment */
@@ -61,8 +61,12 @@
         .submit-btn:hover { background-color: #a32527; }
         .submit-btn:disabled { background-color: #cccccc; }
         
+        /* Secondary Action Button for Modal */
+        .modal-btn-secondary { width: 100%; padding: 15px; background-color: #f4f7f6; color: #333; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s ease; text-decoration: none; display: inline-block; box-sizing: border-box; }
+        .modal-btn-secondary:hover { background-color: #e2e8e6; }
+
         .modal-overlay { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
-        .modal-box { background: white; margin: 15% auto; padding: 40px; border-radius: 15px; width: 85%; max-width: 400px; text-align: center; }
+        .modal-box { background: white; margin: 12% auto; padding: 40px; border-radius: 15px; width: 85%; max-width: 400px; text-align: center; box-sizing: border-box; }
         .success-icon { font-size: 60px; color: #25D366; margin-bottom: 20px; }
     </style>
 </head>
@@ -75,6 +79,8 @@
     </div>
 
     <form id="canadaForm">
+        <input type="hidden" name="form_type" value="Canada">
+
         <div class="section-title">👤 Applicant Details</div>
         <div class="grid">
             <div class="input-group"><label>Full Name (as per Passport) *</label><input type="text" name="full_name" required></div>
@@ -202,7 +208,10 @@
         <div class="success-icon">✔</div>
         <h2 style="color:#C52D2F;">Success!</h2>
         <p>Your details have been saved successfully. We will contact you soon.</p>
-        <button class="submit-btn" onclick="window.location.reload()">Fill New Form</button>
+        
+        <button class="submit-btn" style="margin-top: 15px; padding: 14px;" onclick="window.location.reload()">Fill New Form</button>
+        
+        <a href="https://northgatevisaservices.com/" class="modal-btn-secondary">Go to Home </a>
     </div>
 </div>
 
@@ -224,7 +233,6 @@
         document.getElementById('study_permit_section').style.display = purpose === 'Study' ? 'block' : 'none';
     }
 
-    // New Function for Marital Status
     function toggleMaritalFields(status) {
         if (status === 'Single' || status === '') {
             document.getElementById('spouse_field').style.display = 'none';
@@ -248,7 +256,7 @@
             document.getElementById('thankYouModal').style.display = 'block';
             form.reset();
             btn.disabled = false;
-            btn.innerHTML = "SUBMIT CANADA APPLICATION";
+            btn.innerHTML = "SUBMIT APPLICATION";
         })
         .catch(error => {
             console.error('Error!', error.message);
