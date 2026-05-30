@@ -20,8 +20,9 @@
         input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; transition: 0.3s; }
         input:focus, select:focus, textarea:focus { border-color: #C52D2F; outline: none; box-shadow: 0 0 5px rgba(197, 45, 47, 0.2); }
         .full-width { grid-column: 1 / -1; }
-        #countries_container, #relative_details, #study_permit_section, #refusal_details_container, #criminal_details_container { display: none; }
-        .conditional-fields { background: #fffafa; padding: 15px; border-radius: 8px; border: 1px dashed #C52D2F; margin-top: -10px; margin-bottom: 10px; }
+        /* Idhar children_container b hide list me dal dia */
+        #countries_container, #relative_details, #study_permit_section, #refusal_details_container, #criminal_details_container, #children_container { display: none; }
+        .conditional-fields { background: #fffafa; padding: 15px; border-radius: 8px; border: 1px dashed #C52D2F; margin-top: 10px; margin-bottom: 15px; box-sizing: border-box; }
         .declaration-box { grid-column: 1 / -1; margin-top: 30px; padding: 20px; background: #fff9e6; border-radius: 8px; font-size: 14px; display: flex; align-items: flex-start; gap: 12px; border: 1px solid #ffeeba; text-align: left; width: 100%; box-sizing: border-box; }
         .declaration-box input[type="checkbox"] { width: 18px; height: 18px; margin: 0; margin-top: 2px; cursor: pointer; flex-shrink: 0; }
         .declaration-box label { cursor: pointer; font-weight: 500; line-height: 1.4; margin: 0; }
@@ -43,6 +44,7 @@
     <div class="header"><p><strong>CANADA VISA APPLICANT FORM</strong></p></div>
     <form id="canadaForm">
         <input type="hidden" name="form_type" value="Canada">
+        
         <div class="section-title">👤 Applicant Details</div>
         <div class="grid">
             <div class="input-group"><label>Full Name (as per Passport) *</label><input type="text" name="full_name" required></div>
@@ -52,6 +54,7 @@
             <div class="input-group"><label>Contact Number *</label><input type="text" name="contact" required></div>
             <div class="input-group"><label>Email Address *</label><input type="email" name="email_id" required></div>
         </div>
+        
         <div class="section-title">✈️ Travel Information</div>
         <div class="grid">
             <div class="input-group"><label>Purpose of Travel *</label>
@@ -67,6 +70,7 @@
             <div class="input-group"><label>Duration of Stay</label><input type="text" name="duration" placeholder="e.g. 6 Months"></div>
             <div class="input-group"><label>Intended Province/City in Canada</label><input type="text" name="canada_city" placeholder="e.g. Ontario, Toronto"></div>
         </div>
+        
         <div class="section-title">🌍 Travel History</div>
         <div class="grid">
             <div class="input-group"><label>Have you travelled internationally before? *</label>
@@ -79,10 +83,11 @@
             <div class="input-group"><label>Previous Canada Visa (if any)</label><input type="text" name="prev_canada_visa"></div>
             <div class="input-group full-width"><label>Visa Refusals History (General Info)</label><input type="text" name="refusals" placeholder="None"></div>
         </div>
+        
         <div class="section-title">👨‍👩‍👧 Family Information</div>
         <div class="grid">
             <div class="input-group"><label>Marital Status *</label>
-                <select name="marital_status" required>
+                <select name="marital_status" id="marital_status" onchange="toggleMaritalStatus(this.value)" required>
                     <option value="">Select</option>
                     <option value="Single">Single</option>
                     <option value="Married">Married</option>
@@ -92,7 +97,12 @@
             </div>
             <div class="input-group"><label>Number of Dependents *</label><input type="number" name="dependents" required></div>
             <div class="input-group"><label>Spouse Name</label><input type="text" name="spouse_name"></div>
-            <div class="input-group full-width"><label>Children Details (Names & Ages)</label><textarea name="children_details" rows="2"></textarea></div>
+            
+            <div class="input-group full-width" id="children_container">
+                <label>Children Details (Names & Ages)</label>
+                <textarea name="children_details" rows="2"></textarea>
+            </div>
+            
             <div class="input-group"><label>Any relatives in Canada? *</label>
                 <select name="relatives_in_canada" id="relatives_in_canada" onchange="toggleRelatives(this.value)" required>
                     <option value="No">No</option>
@@ -101,6 +111,7 @@
             </div>
             <div class="input-group" id="relative_details"><label>Relative Details (Name & Relation)</label><input type="text" name="relative_info"></div>
         </div>
+        
         <div class="section-title">💼 Employment / Financial Details</div>
         <div class="grid">
             <div class="input-group"><label>Occupation / Business *</label><input type="text" name="occupation" required></div>
@@ -110,6 +121,7 @@
             <div class="input-group"><label>Bank Balance (Approx. PKR/CAD) *</label><input type="text" name="bank_balance" required></div>
             <div class="input-group"><label>Sponsor Details (if any)</label><input type="text" name="sponsor"></div>
         </div>
+        
         <div id="study_permit_section">
             <div class="section-title">🎓 Study Permit Details</div>
             <div class="grid">
@@ -120,31 +132,43 @@
                 <div class="input-group"><label>GIC Available?</label><select name="gic_available"><option value="No">No</option><option value="Yes">Yes</option></select></div>
             </div>
         </div>
+        
         <div class="section-title">🛡️ Additional Information</div>
         <div class="grid">
-            <div class="input-group"><label>Ever refused a visa from any country? *</label>
-                <select name="any_refusal" id="any_refusal" onchange="toggleRefusalDetails()" required>
-                    <option value="No">No</option>
-                    <option value="Yes">Yes</option>
-                </select>
-            </div>
-            <div class="input-group"><label>Any Criminal Record? *</label>
-                <select name="criminal_record" id="criminal_record" onchange="toggleCriminalDetails()" required>
-                    <option value="No">No</option>
-                    <option value="Yes">Yes</option>
-                </select>
-            </div>
-            <div id="refusal_details_container" class="full-width conditional-fields">
-                <div class="grid" style="gap: 15px;">
-                    <div class="input-group"><label>Which Country? (Refusal) *</label><input type="text" name="refused_country" id="refused_country" placeholder="e.g. USA, UK, Europe"></div>
-                    <div class="input-group"><label>Reason for Refusal *</label><input type="text" name="refused_reason" id="refused_reason" placeholder="e.g. Lack of strong ties"></div>
+            <div class="full-width">
+                <div class="grid" style="grid-template-columns: 1fr;">
+                    <div class="input-group" style="margin-bottom:0;"><label>Ever refused a visa from any country? *</label>
+                        <select name="any_refusal" id="any_refusal" onchange="toggleRefusalDetails()" required>
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="refusal_details_container" class="conditional-fields">
+                    <div class="grid">
+                        <div class="input-group"><label>Which Country? (Refusal) *</label><input type="text" name="refused_country" id="refused_country" placeholder="e.g. USA, UK, Europe"></div>
+                        <div class="input-group"><label>Reason for Refusal *</label><input type="text" name="refused_reason" id="refused_reason" placeholder="e.g. Lack of strong ties"></div>
+                    </div>
                 </div>
             </div>
-            <div id="criminal_details_container" class="full-width conditional-fields">
-                <div class="input-group" style="margin-bottom: 0;"><label>Please provide Criminal Record Details / Reason *</label><textarea name="criminal_details" id="criminal_details" rows="3" placeholder="Provide brief explanation about your record..."></textarea></div>
+
+            <div class="full-width">
+                <div class="grid" style="grid-template-columns: 1fr;">
+                    <div class="input-group" style="margin-bottom:0;"><label>Any Criminal Record? *</label>
+                        <select name="criminal_record" id="criminal_record" onchange="toggleCriminalDetails()" required>
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="criminal_details_container" class="conditional-fields">
+                    <div class="input-group" style="margin-bottom: 0;"><label>Please provide Criminal Record Details / Reason *</label><textarea name="criminal_details" id="criminal_details" rows="3" placeholder="Provide brief explanation about your record..."></textarea></div>
+                </div>
             </div>
+
             <div class="input-group full-width"><label>Medical Conditions (if any)</label><input type="text" name="medical_info" placeholder="None"></div>
         </div>
+        
         <div class="declaration-box">
             <input type="checkbox" id="agree" required>
             <label for="agree">I hereby declare that all the information provided is true and accurate to the best of my knowledge. I understand that providing false or misleading information may result in visa refusal.</label>
@@ -152,6 +176,7 @@
         <button type="submit" id="submitBtn" class="submit-btn">SUBMIT APPLICATION</button>
     </form>
 </div>
+
 <div id="thankYouModal" class="modal-overlay">
     <div class="modal-box">
         <div class="success-icon">✔</div>
@@ -163,11 +188,24 @@
         </div>
     </div>
 </div>
+
 <script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycbywkghKWMbtCjfX7GMrrfTHyO2EnpiYh0Kr2U5ItIkdNHh3sKsnBOaWg4VKtMWj4IKIeA/exec'; 
     const form = document.getElementById('canadaForm');
     const btn = document.getElementById('submitBtn');
     
+    // Naya function Jo Marital Status check karta hai
+    function toggleMaritalStatus(val) {
+        const childrenBox = document.getElementById('children_container');
+        // Agar single nahi hai aur khali (Select) b nahi h, tabhi children show honge
+        if (val === 'Married' || val === 'Divorced' || val === 'Widowed') {
+            childrenBox.style.display = 'block';
+        } else {
+            childrenBox.style.display = 'none';
+            childrenBox.querySelector('textarea').value = ''; // field clear krne k lie
+        }
+    }
+
     function toggleCountries(val) { 
         document.getElementById('countries_container').style.display = val === 'Yes' ? 'block' : 'none'; 
     }
@@ -229,6 +267,7 @@
             toggleRefusalDetails(); 
             toggleCriminalDetails(); 
             toggleRelatives('No'); 
+            toggleMaritalStatus(''); // Reset par children ko wapis hide krne k lie
             btn.disabled = false; 
             btn.innerHTML = "SUBMIT APPLICATION"; 
         })
@@ -239,9 +278,11 @@
         });
     });
     
+    // Initial triggers load par hide rakhne k lie
     toggleRefusalDetails();
     toggleCriminalDetails();
     toggleRelatives('No');
+    toggleMaritalStatus('');
 </script>
 </body>
 </html>
